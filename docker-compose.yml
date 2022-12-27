@@ -1,0 +1,90 @@
+version: '3.1'
+
+services:
+  db:
+    image: mariadb
+    restart: always
+    container_name: mariaDB_bigdata
+    environment:
+      MYSQL_ROOT_PASSWORD: abc123.
+      MYSQL_DATABASE: bigdata
+      MYSQL_USER: usuario
+      MYSQL_PASSWORD: abc123.
+    ports:
+      - 3306:3306
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+      - ./files/mariadb:/opt/varios
+    networks:
+      # - bigdata
+      bigdata:
+        ipv4_address: 192.168.99.100
+
+  pentaho-server:
+    image: efja/varios:pentaho
+    restart: always
+    container_name: pentahosvr_bigdata
+    volumes:
+      # - ./data/pentaho:/data
+      - ./app:/opt/pentaho
+    ports:
+      - "8080:8080"
+    networks:
+      - bigdata
+      # bigdata:
+      #   ipv4_address: 192.168.99.101
+
+  jupyter:
+    image: jupyter/base-notebook:latest
+    container_name: jupyter_bigdata
+    volumes:
+        - /tmp/jupyter_test_dir:/home/docker_worker/work
+    ports:
+        - "8891:8888"
+    command: "start-notebook.sh"
+    user: root
+    environment:
+      NB_USER: usuario
+      NB_UID: 1008
+      NB_GID: 1011
+      CHOWN_HOME: 'yes'
+      CHOWN_HOME_OPTS: -R
+    networks:
+      - bigdata
+
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   container_name: adminer_mariaDB_bigdata
+  #   ports:
+  #     - 8081:8080
+  #   networks:
+  #     - bigdata
+  #     # bigdata:
+  #     #   ipv4_address: 192.168.99.102
+
+  webspoon:
+    image: hiromuhota/webspoon
+    restart: always
+    container_name: webspoon_bigdata
+    environment:
+      - "JAVA_OPTS=-Xms1024m -Xmx2048m"
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./data/spoon/lib/mariadb-java-client-2.7.4.jar:/usr/local/tomcat/lib/mariadb-java-client-2.7.4.jar
+      - ./files/spoon:/home/tomcat/.kettle/data/compartido
+    networks:
+      - bigdata
+      # bigdata:
+      #   ipv4_address: 192.168.99.104
+
+networks:
+  bigdata:
+    name: bigdata
+    driver: bridge
+    driver_opts:
+     com.docker.network.bridge.name: bigdata
+    ipam:
+     config:
+       - subnet: 192.168.99.0/24
