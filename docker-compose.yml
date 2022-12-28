@@ -16,7 +16,6 @@ services:
       - ./data/mariadb:/var/lib/mysql
       - ./files/mariadb:/opt/varios
     networks:
-      # - bigdata
       bigdata:
         ipv4_address: 192.168.99.100
 
@@ -30,38 +29,8 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - bigdata
-      # bigdata:
-      #   ipv4_address: 192.168.99.101
-
-  jupyter:
-    image: jupyter/base-notebook:latest
-    container_name: jupyter_bigdata
-    volumes:
-        - /tmp/jupyter_test_dir:/home/docker_worker/work
-    ports:
-        - "8891:8888"
-    command: "start-notebook.sh"
-    user: root
-    environment:
-      NB_USER: usuario
-      NB_UID: 1008
-      NB_GID: 1011
-      CHOWN_HOME: 'yes'
-      CHOWN_HOME_OPTS: -R
-    networks:
-      - bigdata
-
-  # adminer:
-  #   image: adminer
-  #   restart: always
-  #   container_name: adminer_mariaDB_bigdata
-  #   ports:
-  #     - 8081:8080
-  #   networks:
-  #     - bigdata
-  #     # bigdata:
-  #     #   ipv4_address: 192.168.99.102
+      bigdata:
+        ipv4_address: 192.168.99.101
 
   webspoon:
     image: hiromuhota/webspoon
@@ -75,9 +44,25 @@ services:
       - ./data/spoon/lib/mariadb-java-client-2.7.4.jar:/usr/local/tomcat/lib/mariadb-java-client-2.7.4.jar
       - ./files/spoon:/home/tomcat/.kettle/data/compartido
     networks:
-      - bigdata
-      # bigdata:
-      #   ipv4_address: 192.168.99.104
+      bigdata:
+        ipv4_address: 192.168.99.102
+
+  jupyter:
+    image: jupyter/base-notebook:latest
+    container_name: jupyter_bigdata
+    ports:
+        - "8891:8888"
+    command: "start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''"
+    user: root
+    environment:
+      NB_USER: usuario
+      NB_UID: 1008
+      NB_GID: 1011
+      CHOWN_HOME: 'yes'
+      CHOWN_HOME_OPTS: -R
+    networks:
+      bigdata:
+        ipv4_address: 192.168.99.103
 
 networks:
   bigdata:
