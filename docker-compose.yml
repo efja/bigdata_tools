@@ -19,18 +19,47 @@ services:
       bigdata:
         ipv4_address: 192.168.99.100
 
-  pentaho-server:
-    image: efja/varios:pentaho
-    restart: always
-    container_name: pentahosvr_bigdata
-    volumes:
-      # - ./data/pentaho:/data
-      - ./app:/opt/pentaho
-    ports:
-      - "8080:8080"
-    networks:
-      bigdata:
-        ipv4_address: 192.168.99.101
+  # pentaho-server:
+  #   # engadir un usuario: useradd -m -s /bin/bash pentaho
+  #   # image: efja/varios:pentaho
+  #   image: postgres
+  #   restart: always
+  #   container_name: pentahosvr_bigdata
+  #   build: ./build/ph
+  #   environment:
+  #     POSTGRES_PASSWORD: abc123.
+  #   volumes:
+  #     # - ./data/pentaho:/data
+  #     - ./app:/opt/pentaho-install
+  #   ports:
+  #     - "8009:8009"
+  #     - "8080:8080"
+  #     - "8081:8080"
+  #     - "9001:9001"
+  #     - "11001:11001"
+  #     - "5432:5432"
+  #   networks:
+  #     bigdata:
+  #       ipv4_address: 192.168.99.101
+
+  # pentaho-ce-server:
+  #   image: zhicwu/biserver-ce
+  #   restart: always
+  #   container_name: pentahosvr_ce_bigdata
+  #   environment:
+  #     SERVER_PASSWD: 'abc123.'
+  #     DB_HOST: pentahobi-ce
+  #     DB_PORT: 3306
+  #     DB_USER: usuario
+  #     DB_PASSWD: 'abc123.'
+  #   volumes:
+  #     # - ./data/pentaho:/data
+  #     - ./app:/opt/pentaho
+  #   ports:
+  #     - "8089:8080"
+  #   networks:
+  #     bigdata:
+  #       ipv4_address: 192.168.99.102
 
   webspoon:
     image: hiromuhota/webspoon
@@ -45,7 +74,7 @@ services:
       - ./files/spoon:/home/tomcat/.kettle/data/compartido
     networks:
       bigdata:
-        ipv4_address: 192.168.99.102
+        ipv4_address: 192.168.99.103
 
   jupyter:
     image: jupyter/base-notebook:latest
@@ -62,7 +91,7 @@ services:
       CHOWN_HOME_OPTS: -R
     networks:
       bigdata:
-        ipv4_address: 192.168.99.103
+        ipv4_address: 192.168.99.105
 
 networks:
   bigdata:

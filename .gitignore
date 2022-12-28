@@ -1,5 +1,7 @@
 /app
 
+/data/hsqldb
+/data/jackrabbit-repository
 /data/mariadb
 
 /files/mariadb

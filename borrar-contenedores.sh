@@ -1,9 +1,10 @@
 #!/bin/bash
 
 CONTENEDORES=(
-    "webspoon_bigdata"
-    "pentahosvr_bigdata"
     "mariaDB_bigdata"
+    "pentahosvr_bigdata"
+    "pentahosvr_ce_bigdata"
+    "webspoon_bigdata"
     "jupyter_bigdata"
 )
 
